@@ -1,6 +1,6 @@
-import axios from 'axios';
-import { User, UserFavouriteSongs, UserInteractionCount } from '../components/types';
-import { getToken } from './AuthService';
+import axios, { AxiosRequestConfig } from 'axios';
+import { User, UserFavouriteSongs, UserInteractionCount } from '../types';
+import { getDecodedToken, getToken, signOut } from './AuthService';
 
 const API_URL = "http://localhost:8085/api/users";
 
@@ -14,7 +14,7 @@ const userService = {
       return [];
     }
   },
-  getUserById: async (id: number): Promise<User | null> => {
+  getUserById: async (id: string): Promise<User | null> => {
     try {
       const response = await axios.get(`${API_URL}/${id}`);
       return response.data;
@@ -24,7 +24,7 @@ const userService = {
     }
   },
 
-  deleteUser: async (id: number): Promise<boolean> => {
+  deleteUser: async (userId: string): Promise<boolean> => {
     try {
       const token = getToken();
   
@@ -34,14 +34,47 @@ const userService = {
         },
       };
   
-      await axios.delete(`${API_URL}/${id}`, config);
+      await axios.delete(`${API_URL}/delete?userId=${userId}`, config);
+      signOut();
       return true;
     } catch (error) {
       console.error(error);
       return false;
     }
   },
-
+  downloadData: async (): Promise<string | null> => {
+    try {
+      const decodedToken = getDecodedToken() as { userId: string };
+      if (decodedToken) {
+        const userId = decodedToken.userId;
+  
+        const config: AxiosRequestConfig = {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        };
+  
+        const response = await axios.get<string>(`${API_URL}/${userId}/download-data`, config);
+        if (response.data) {
+          const downloadUrl = response.data;
+          const link = document.createElement('a');
+          link.href = downloadUrl;
+          link.target = '_blank';
+          link.click();
+          
+          // Wait for the download to finish
+          await new Promise(resolve => setTimeout(resolve, 2000)); // Adjust the timeout as needed
+  
+          return downloadUrl;
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  
+    return null;
+  },
+  
   addSongToFavouriteList: async (userFavoriteSongDTO: UserFavouriteSongs): Promise<User | null> => {
     try {
       const token = getToken();

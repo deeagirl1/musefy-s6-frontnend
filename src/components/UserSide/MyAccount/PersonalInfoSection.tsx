@@ -1,5 +1,5 @@
-import React from 'react';
-import { Box, Typography, TextField, Grid, Button } from '@mui/material';
+import React from "react";
+import { Box, Typography, TextField, Grid, Button } from "@mui/material";
 
 const PersonalInfoSection: React.FC = () => {
   return (
@@ -19,7 +19,7 @@ const PersonalInfoSection: React.FC = () => {
         <TextField label="Email" fullWidth />
       </Box>
       <Box mt={3}>
-        <Button  variant="contained"  sx={{ backgroundColor: '#1db954' }}>
+        <Button variant="contained" sx={{ backgroundColor: "#1db954" }}>
           Save Changes
         </Button>
       </Box>

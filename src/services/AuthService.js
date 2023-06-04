@@ -4,8 +4,6 @@ import jwt_decode from "jwt-decode";
 
 const API_URL = "http://localhost:8085/api/auth/";
 
-
-
 export const authenticateUser = (username, password) => {
   return (dispatch) => {
     return axios
@@ -39,13 +37,14 @@ export const authenticateUser = (username, password) => {
 };
 
 export const registerUser = (username, password, email, firstName, lastName) => {
-  return axios.post(API_URL + "register", {
-    username,
-    password,
-    email,
-    firstName,
-    lastName
-  })
+  return axios
+    .post(API_URL + "register", {
+      username,
+      password,
+      email,
+      firstName,
+      lastName,
+    })
     .then((response) => {
       if (response.data) {
         return response.data;
@@ -53,9 +52,9 @@ export const registerUser = (username, password, email, firstName, lastName) => 
     })
     .catch((error) => {
       console.log(error.message);
-    }
-    );
-}
+    });
+};
+
 
 export const signOut = () => {
   const token = getToken();
@@ -66,68 +65,42 @@ export const signOut = () => {
     },
   };
 
-  document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+  Cookies.remove("token"); // Remove the token cookie
 
-  return axios.post(API_URL + '/sign-out', null, config)
+  return axios
+    .post(API_URL + "sign-out", null, config)
     .then((response) => {
       return { success: true };
     })
     .catch((error) => {
-      console.error('Sign Out Error:', error);
+      console.error("Sign Out Error:", error);
       return { success: false };
     });
 };
 
-
 export const checkIsSignedIn = () => {
-  return axios.get(API_URL + '/check-signed-in')
+  return axios
+    .get(API_URL + "check-signed-in")
     .then((response) => response.status === 200)
     .catch(() => false);
 };
 
 export const getToken = () => {
-  return Cookies.get('token');
+  return Cookies.get("token");
 };
 
 export const getDecodedToken = () => {
   const token = getToken();
   if (token) {
-    return jwt_decode(token);
+    try {
+      const decodedToken = jwt_decode(token);
+      return decodedToken;
+    } catch (error) {
+      console.log('Error decoding token:', error.message);
+    }
   }
   return null;
 };
-
-
-// export const tokenRefresh = (refreshToken) => {
-//   console.log("refreshhh");
-//   return (dispatch) => {
-//     return axios
-//       .post(
-//         API_URL + "token",
-//         { refreshToken }
-//       )
-//       .then((response) => {
-//         if (response.data) {
-//           dispatch(
-//             authenticationSuccess(
-//               response.data.userId,
-//               response.data.accessToken,
-//               response.data.refreshToken
-//             )
-//           );
-//         }
-//       })
-//       .catch((error) => {
-//         console.log(error.message);
-//         dispatch(authenticationFailure(error.message));
-//       });
-//   };
-// };
-// const startTokenRefresh = (refreshToken) => {
-//   setInterval(() => {
-//     store.dispatch(tokenRefresh(refreshToken));
-//   }, 12000); // call every 4 minutes (240000 milliseconds)
-// };
 
 export const authenticationSuccess = (userId, token, refreshToken) => {
   return {
@@ -135,6 +108,20 @@ export const authenticationSuccess = (userId, token, refreshToken) => {
     payload: { userId, token, refreshToken },
   };
 };
+
+export const getUserIdFromToken = (token) => {
+  if (token) {
+    try {
+      const decodedToken = jwt_decode(token);
+      const userId = decodedToken.userId; // Retrieve the userId from the decoded token
+      return userId;
+    } catch (error) {
+      console.log('Error decoding token:', error.message);
+    }
+  }
+  return null;
+};
+
 
 export const authenticationFailure = (error) => {
   return {
@@ -149,14 +136,16 @@ export const logout = () => {
   return {
     type: "LOGOUT",
   };
-}
+};
 
 export const getRole = async (token) => {
-  return axios.get(API_URL + "role?token=" + token).then((response) => {
+  try {
+    const response = await axios.get(API_URL + "role?token=" + token);
     if (response.data) {
-      localStorage.setItem("role", response.data);
+      const role = response.data;
+      return role;
     }
-  }).catch((error) => {
+  } catch (error) {
     console.log(error.message);
-  });
-}
+  }
+};

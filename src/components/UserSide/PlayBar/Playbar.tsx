@@ -8,16 +8,20 @@ import {
   VolumeDown,
   VolumeUp,
 } from "@mui/icons-material";
-import { Song, UserInteractionCount } from "../types";
-import userService from "../../services/UserService";
-import { getToken, getDecodedToken } from "../../services/AuthService";
+import { Song, UserFavouriteSongs, UserInteractionCount } from "../../../types";
+import userService from "../../../services/UserService";
+import { getDecodedToken } from "../../../services/AuthService";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 interface PlaybarProps {
   song: Song;
   isPlaying: boolean;
   volume: number;
   onPlayPause: () => void;
-  onVolumeChange: (event: React.SyntheticEvent | Event, newValue: number | number[]) => void;
+  onVolumeChange: (
+    event: React.SyntheticEvent | Event,
+    newValue: number | number[]
+  ) => void;
   onSkipPrevious: () => void;
   onSkipNext: () => void;
 }
@@ -34,14 +38,15 @@ const Playbar: React.FC<PlaybarProps> = ({
   const audioRef = useRef<HTMLAudioElement>(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [isPaused, setIsPaused] = useState(!isPlaying); // Manage paused state
 
   useEffect(() => {
     const decodedToken = getDecodedToken() as { userId: string };
-  
+
     if (audioRef.current) {
       if (isPlaying) {
         audioRef.current.play();
-  
+
         if (decodedToken) {
           const userId = decodedToken.userId;
           const userInteractionDTO: UserInteractionCount = {
@@ -54,7 +59,8 @@ const Playbar: React.FC<PlaybarProps> = ({
         audioRef.current.pause();
       }
     }
-  }, [isPlaying]);
+  }, [isPlaying, song]);
+
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = volume / 100;
@@ -65,6 +71,42 @@ const Playbar: React.FC<PlaybarProps> = ({
     if (audioRef.current) {
       setCurrentTime(audioRef.current.currentTime);
     }
+  };
+
+  const handlePlayPause = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+    }
+    onPlayPause();
+  };
+
+  const handleAddToFavorites = async () => {
+    const decodedToken = getDecodedToken() as { userId?: string } | null;
+
+    if (decodedToken && decodedToken.userId) {
+      const userFavoriteSongDTO: UserFavouriteSongs = {
+        userId: decodedToken.userId,
+        songId: song.songId,
+      };
+
+      console.log(userFavoriteSongDTO);
+
+      const result = await userService.addSongToFavouriteList(
+        userFavoriteSongDTO
+      );
+    }
+  };
+
+  const handleSkipPrevious = () => {
+    onSkipPrevious();
+  };
+
+  const handleSkipNext = () => {
+    onSkipNext();
   };
 
   const handleDurationChange = () => {
@@ -122,7 +164,7 @@ const Playbar: React.FC<PlaybarProps> = ({
           <audio
             src={song.mp3GCPLink}
             ref={audioRef}
-            onEnded={onPlayPause}
+            onEnded={handleSkipNext}
             onTimeUpdate={handleTimeUpdate}
             onLoadedMetadata={handleDurationChange}
           ></audio>
@@ -133,13 +175,13 @@ const Playbar: React.FC<PlaybarProps> = ({
           spacing={1}
           sx={{ color: "#929292" }}
         >
-          <IconButton onClick={onSkipPrevious} sx={{ color: "inherit" }}>
+          <IconButton onClick={handleSkipPrevious} sx={{ color: "inherit" }}>
             <SkipPrevious />
           </IconButton>
-          <IconButton onClick={onPlayPause} sx={{ color: "inherit" }}>
-            {isPlaying ? <Pause /> : <PlayArrow />}
+          <IconButton onClick={handlePlayPause} sx={{ color: "inherit" }}>
+            {!isPlaying ? <PlayArrow /> : <Pause />} {/* Update the icon */}
           </IconButton>
-          <IconButton onClick={onSkipNext} sx={{ color: "inherit" }}>
+          <IconButton onClick={handleSkipNext} sx={{ color: "inherit" }}>
             <SkipNext />
           </IconButton>
           <Typography sx={{ mr: "1rem" }}>{formatTime(currentTime)}</Typography>
@@ -156,17 +198,8 @@ const Playbar: React.FC<PlaybarProps> = ({
           <Typography sx={{ ml: "1rem" }}>
             {formatTime(duration - currentTime)}
           </Typography>
-          <IconButton onClick={() => {}} sx={{ color: "inherit" }}>
-            {/* Add icon for favorite */}
-          </IconButton>
-          <IconButton onClick={() => {}} sx={{ color: "inherit" }}>
-            {/* Add icon for shuffle */}
-          </IconButton>
-          <IconButton onClick={() => {}} sx={{ color: "inherit" }}>
-            {/* Add icon for repeat */}
-          </IconButton>
-          <IconButton sx={{ color: "inherit" }}>
-            {/* Add icon for queue */}
+          <IconButton onClick={handleAddToFavorites} sx={{ color: "inherit" }}>
+            <FavoriteIcon />
           </IconButton>
           <Box sx={{ width: 200, mt: "100px" }}>
             <Stack spacing={2} direction="row" alignItems="center">
@@ -184,12 +217,21 @@ const Playbar: React.FC<PlaybarProps> = ({
               <VolumeUp />
             </Stack>
           </Box>
-          <Stack direction="row" alignItems="center" spacing={1}>
-            {/* Add song image */}
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <img
+              src={song.imageLink}
+              alt="Song Cover"
+              style={{ height: 50, width: 50, marginRight: 10 }}
+            />
             <Box>
-              {/* Add artist name and song title */}
+              <Typography variant="subtitle1" sx={{ color: "#fff" }}>
+                {song.artist}
+              </Typography>
+              <Typography variant="body1" sx={{ color: "#fff" }}>
+                {song.title}
+              </Typography>
             </Box>
-          </Stack>
+          </Box>
         </Stack>
       </Box>
     </Box>

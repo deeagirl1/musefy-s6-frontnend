@@ -1,6 +1,7 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import React from "react";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+import videoFile from '../assets/videos/club.mp4';
 
 const HomeWrapper = styled.div`
   display: flex;
@@ -41,15 +42,6 @@ const Button = styled(Link)`
   }
 `;
 
-const Background = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-`;
-
 const VideoBackground = styled.video`
   position: absolute;
   top: 0;
@@ -64,7 +56,7 @@ const Home: React.FC = () => {
   return (
     <HomeWrapper>
       <VideoBackground autoPlay muted loop>
-      <source src="https://storage.googleapis.com/musefys6-songs-bucket/videos/Club_Scene_Blur.mp4" type="video/mp4" />
+        <source src={videoFile} type="video/mp4" />
         Your browser does not support the video tag.
       </VideoBackground>
       <Header>Discover new music with Musefy</Header>
@@ -77,6 +69,3 @@ const Home: React.FC = () => {
 };
 
 export default Home;
-
-
-

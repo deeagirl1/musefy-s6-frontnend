@@ -1,21 +1,28 @@
-import React, { useState } from 'react';
-import { TextField, InputAdornment, IconButton } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
+import React, { useState } from "react";
+import { TextField, InputAdornment, IconButton } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import ClearIcon from "@mui/icons-material/Clear";
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const handleSearchQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchQueryChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setSearchQuery(event.target.value);
   };
 
   const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     onSearch(searchQuery);
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery("");
   };
 
   return (
@@ -29,6 +36,11 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
+              {searchQuery && (
+                <IconButton onClick={handleClearSearch} size="small">
+                  <ClearIcon />
+                </IconButton>
+              )}
               <IconButton type="submit" size="small">
                 <SearchIcon />
               </IconButton>

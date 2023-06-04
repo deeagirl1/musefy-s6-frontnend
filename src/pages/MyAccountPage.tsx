@@ -1,8 +1,8 @@
 import React from 'react';
 import { Container, Typography } from '@mui/material';
-import PersonalInfoSection from '../components/MyAccount/PersonalInfoSection';
-import PreferencesSection from '../components/MyAccount/PreferenceSection';
-import SecuritySection from '../components/MyAccount/SecuritySection';
+import PersonalInfoSection from '../components/UserSide/MyAccount/PersonalInfoSection';
+import PreferencesSection from '../components/UserSide/MyAccount/PreferenceSection';
+import SecuritySection from '../components/UserSide/MyAccount/SecuritySection';
 
 const MyAccountPage: React.FC = () => {
   return (

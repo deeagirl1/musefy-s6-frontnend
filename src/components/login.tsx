@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { Container, Typography, TextField, Button } from '@mui/material';
-import { ThunkDispatch, AnyAction } from '@reduxjs/toolkit';
-import { useNavigate, Link } from 'react-router-dom';
-import { authenticateUser, authenticationSuccess, authenticationFailure } from '../services/AuthService';
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import { Container, Typography, TextField, Button } from "@mui/material";
+import { ThunkDispatch, AnyAction } from "@reduxjs/toolkit";
+import { useNavigate, Link } from "react-router-dom";
+import {
+  authenticateUser,
+  authenticationFailure,
+} from "../services/AuthService";
+import { useDispatch } from "react-redux";
 
 export const Login: React.FC = (props: any) => {
-  
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
@@ -27,10 +29,11 @@ export const Login: React.FC = (props: any) => {
       try {
         const response = await dispatch(authenticateUser(username, password));
         if (response.success) {
-          navigate('/browse');
-          window.location.reload(); 
+          console.log(response)
+          navigate("/browse");
+          window.location.reload();
         } else {
-          dispatch(authenticationFailure('Invalid username or password'));
+          dispatch(authenticationFailure("Invalid username or password"));
         }
       } catch (error: any) {
         dispatch(authenticationFailure(error.message));
@@ -38,20 +41,44 @@ export const Login: React.FC = (props: any) => {
     }
   };
 
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
 
   return (
-    <Container maxWidth="xs" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '50vh' }}>
+    <Container
+      maxWidth="xs"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "50vh",
+      }}
+    >
       <Typography variant="h4" align="center" gutterBottom>
-        Sign in 
+        Sign in
       </Typography>
-      <TextField label="Email or username" fullWidth margin="normal" onChange={changeUsername} />
-      <TextField label="Password" type="password" fullWidth margin="normal"  onChange={changePassword}/>
-      <Button variant="contained" fullWidth sx={{ backgroundColor: '#1db954', marginTop: '16px' }} onClick={handleSubmit}>
+      <TextField
+        label="Email or username"
+        fullWidth
+        margin="normal"
+        onChange={changeUsername}
+      />
+      <TextField
+        label="Password"
+        type="password"
+        fullWidth
+        margin="normal"
+        onChange={changePassword}
+      />
+      <Button
+        variant="contained"
+        fullWidth
+        sx={{ backgroundColor: "#1db954", marginTop: "16px" }}
+        onClick={handleSubmit}
+      >
         Log in
       </Button>
-      <Typography variant="body2" align="center" sx={{ marginTop: '16px' }}>
+      <Typography variant="body2" align="center" sx={{ marginTop: "16px" }}>
         Don't have an account? <Link to="/register">Register</Link>
       </Typography>
     </Container>

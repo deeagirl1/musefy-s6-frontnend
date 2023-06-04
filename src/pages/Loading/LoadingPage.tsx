@@ -1,6 +1,6 @@
-import React from 'react';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import './LoadingPage.css';
+import React from "react";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
+import "./LoadingPage.css";
 
 const LoadingPage: React.FC = () => {
   return (

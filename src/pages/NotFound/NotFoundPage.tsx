@@ -1,7 +1,6 @@
-import React from 'react';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import './NotFound.css';
-
+import React from "react";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
+import "./NotFound.css";
 
 const NotFoundPage: React.FC = () => {
   return (

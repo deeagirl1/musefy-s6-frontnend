@@ -39,13 +39,13 @@ export type Song = {
 export type User = {
   id: string;
   name: string;
+  email : string;
   // Add other user properties here
 }
 
 export type UserFavouriteSongs = {
   userId: string;
   songId: string;
-  // Add other user properties here
 }
 
 export type UserRecommendedSongs = {

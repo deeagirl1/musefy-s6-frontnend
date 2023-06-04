@@ -1,5 +1,5 @@
-import React from 'react';
-import BrowseComponent from '../components/Browse/BrowseComponent';
+import React from "react";
+import BrowseComponent from "../components/UserSide/Browse/BrowseComponent";
 
 const BrowsePage: React.FC = ({}) => {
   return (

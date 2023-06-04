@@ -1,0 +1,8 @@
+.searchInput {
+    flex-grow: 1;
+    background-color: #fff;
+    border-radius: 500px;
+    padding: 4px 8px;
+    transition: width 0.2s ease;
+    width: 100%;
+  }

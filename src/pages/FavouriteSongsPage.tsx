@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import SongCard from '../components/Explore/SongCard';
-import { Song } from '../components/types';
-import userService from '../services/UserService';
-import { getDecodedToken, getToken } from '../services/AuthService';
-import songService from '../services/music-service/SongService';
+import React, { useState, useEffect } from "react";
+import SongCard from "../components/UserSide/Explore/SongCard";
+import { Song } from "../types";
+import userService from "../services/UserService";
+import { getDecodedToken } from "../services/AuthService";
+import songService from "../services/music-service/SongService";
 
 const FavouriteSongsPage: React.FC = () => {
   const [favoriteSongs, setFavoriteSongs] = useState<Song[]>([]);
@@ -12,20 +12,22 @@ const FavouriteSongsPage: React.FC = () => {
     const fetchData = async () => {
       try {
         const decodedToken = getDecodedToken() as { userId: string };
-  
+
         if (decodedToken && decodedToken.userId) {
           const userId = decodedToken.userId;
           const songIds = await userService.getUserFavoriteSongs(userId);
-  
+
           if (songIds) {
             const fetchSongsPromises = songIds.map(async (songId) => {
               const song = await songService.getSongById(songId);
               return song;
             });
-  
+
             const songs = await Promise.all(fetchSongsPromises);
-            const filteredSongs = songs.filter((song) => song !== null) as Song[];
-  
+            const filteredSongs = songs.filter(
+              (song) => song !== null
+            ) as Song[];
+
             setFavoriteSongs(filteredSongs);
           }
         }
@@ -33,11 +35,10 @@ const FavouriteSongsPage: React.FC = () => {
         console.error(error);
       }
     };
-  
+
     fetchData();
   }, []);
-  
-  
+
   return (
     <div>
       <h2>Favourite Songs</h2>

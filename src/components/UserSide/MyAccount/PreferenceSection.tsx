@@ -1,5 +1,5 @@
-import React from 'react';
-import { Box, Typography, Checkbox, FormControlLabel } from '@mui/material';
+import React from "react";
+import { Box, Typography, Checkbox, FormControlLabel } from "@mui/material";
 
 const PreferencesSection: React.FC = () => {
   return (
