@@ -13,7 +13,7 @@ import Playbar from "../PlayBar/Playbar";
 import React from "react";
 
 const BrowseComponent: React.FC = () => {
-    const autoScrollRef = React.useRef<any>(null);
+
   const [songsData, setSongsData] = useState<Song[]>([]);
   const [playlistsData, setPlaylistsData] = useState<Playlist[]>([]);
   const [albumsData, setAlbumsData] = useState<Album[]>([]);
@@ -29,20 +29,12 @@ const BrowseComponent: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch the initial data for albums and playlists
-        const playlists = await PlaylistService.getPlaylists();
-        const albums = await AlbumService.getAlbums();
-        setPlaylistsData(playlists);
-        setAlbumsData(albums);
-
-        // Fetch the first page of songs
-        const songResponse = await songService.getSongs(1, 4);
+        const songResponse = await songService.getSongs();
         if (songResponse.songs.length > 0) {
           setSongsData(songResponse.songs);
-          setCurrentPage(1);
+
           setTotalPages(songResponse.totalPages);
         }
-
         setIsLoading(false);
       } catch (error) {
         console.error(error);
@@ -53,22 +45,11 @@ const BrowseComponent: React.FC = () => {
     fetchData();
   }, []);
 
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (autoScrollRef.current) {
-        autoScrollRef.current.scrollBy({ left: 200, behavior: 'smooth' });
-      }
-    }, 2000);
-      
-    return () => clearInterval(interval);
-  }, []);
-
-
   const handleLoadMoreSongs = async () => {
     if (currentPage < totalPages) {
       const nextPage = currentPage + 1;
-      const songResponse = await songService.getSongs(nextPage, 4);
+      const songResponse = await songService.getSongs(nextPage, 4); // Fetch 4 songs per page
+      console.log(songResponse);
       if (songResponse.songs.length > 0) {
         setSongsData((prevSongs) => [...prevSongs, ...songResponse.songs]);
         setCurrentPage(nextPage);
@@ -82,12 +63,16 @@ const BrowseComponent: React.FC = () => {
   }
 
   const handleSongClick = (song: Song) => {
-    setSelectedSong(song);
-    setIsPlaying(true); // Play the selected song when clicked
-    const songIndex = songsData.findIndex((s) => s.songId === song.songId);
-    setCurrentSongIndex(songIndex);
+    if (selectedSong && selectedSong.songId === song.songId) {
+      setIsPlaying(false); // Pause the song if the same song is clicked again
+      setCurrentSongIndex(0); // Reset the current song index to start from the beginning
+    } else {
+      setSelectedSong(song);
+      setIsPlaying(true); // Play the selected song
+      const songIndex = songsData.findIndex((s) => s.songId === song.songId);
+      setCurrentSongIndex(songIndex);
+    }
   };
-
   const handlePlayPause = () => {
     setIsPlaying(!isPlaying); // Toggle the play/pause state
   };
@@ -139,7 +124,7 @@ const BrowseComponent: React.FC = () => {
       <Typography variant="h4" gutterBottom>
         Songs
       </Typography>
-          <Grid container spacing={3} style={{ overflowX: 'scroll', scrollSnapType: 'x mandatory' }} ref={autoScrollRef}>
+          <Grid container spacing={3} style={{ overflowX: 'scroll', scrollSnapType: 'x mandatory' }}>
         {songsData.length ? songsData.map((song) => (
           <Grid item xs={3} style={{ scrollSnapAlign: 'start' }} key={song.songId}>
             <SongCard
@@ -171,7 +156,7 @@ const BrowseComponent: React.FC = () => {
       <Typography variant="h4" gutterBottom>
         Playlists
       </Typography>
-      <Grid container spacing={3} style={{ overflowX: 'scroll', scrollSnapType: 'x mandatory' }} ref={autoScrollRef}>
+      <Grid container spacing={3} style={{ overflowX: 'scroll', scrollSnapType: 'x mandatory' }}>
         {playlistsData.length ? playlistsData.map((playlist) => (
           <Grid item xs={3} style={{ scrollSnapAlign: 'start' }} key={playlist.id}>
             <PlaylistCard playlist={playlist} />
@@ -186,7 +171,7 @@ const BrowseComponent: React.FC = () => {
       <Typography variant="h4" gutterBottom>
         Albums
       </Typography>
-      <Grid container spacing={3} style={{ overflowX: 'scroll', scrollSnapType: 'x mandatory' }} ref={autoScrollRef}>
+      <Grid container spacing={3} style={{ overflowX: 'scroll', scrollSnapType: 'x mandatory' }}>
         {albumsData.length ? albumsData.map((album) => (
           <Grid item xs={3} style={{ scrollSnapAlign: 'start' }} key={album.albumId}>
             <AlbumCard album={album} />

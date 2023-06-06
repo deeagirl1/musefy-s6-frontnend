@@ -17,15 +17,6 @@ const SongCard: React.FC<SongCardProps> = ({ song, onClick }) => {
     onClick(song);
   };
 
-  const showAlert = (severity: any, message: any) => {
-    <Alert severity={severity}>
-      <AlertTitle>
-        {severity.charAt(0).toUpperCase() + severity.slice(1)}
-      </AlertTitle>
-      {message}
-    </Alert>;
-  };
-
   return (
     <Card sx={{ margin: "0 5px" }}>
       <CardMedia

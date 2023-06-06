@@ -23,8 +23,8 @@ export const authenticateUser = (username, password) => {
 
           // Set the token as a cookie
           Cookies.set('token', accessToken, cookieOptions);
-
-          return { success: true, accessToken: accessToken }; // Return success status and access token
+          dispatch(authenticationSuccess(response.data.userId, accessToken));
+          return { success: true }; // Return success status and access token
         } else {
           return { success: false }; // Return failure status
         }
@@ -37,14 +37,13 @@ export const authenticateUser = (username, password) => {
 };
 
 export const registerUser = (username, password, email, firstName, lastName) => {
-  return axios
-    .post(API_URL + "register", {
-      username,
-      password,
-      email,
-      firstName,
-      lastName,
-    })
+  return axios.post(API_URL + "register", {
+    username,
+    password,
+    email,
+    firstName,
+    lastName
+  })
     .then((response) => {
       if (response.data) {
         return response.data;
@@ -52,55 +51,60 @@ export const registerUser = (username, password, email, firstName, lastName) => 
     })
     .catch((error) => {
       console.log(error.message);
-    });
-};
+    }
+    );
+}
 
-
-export const signOut = () => {
-  const token = getToken();
-
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-
-  Cookies.remove("token"); // Remove the token cookie
-
-  return axios
-    .post(API_URL + "sign-out", null, config)
-    .then((response) => {
-      return { success: true };
-    })
-    .catch((error) => {
-      console.error("Sign Out Error:", error);
-      return { success: false };
-    });
-};
 
 export const checkIsSignedIn = () => {
-  return axios
-    .get(API_URL + "check-signed-in")
+  return axios.get(API_URL + '/check-signed-in')
     .then((response) => response.status === 200)
     .catch(() => false);
 };
 
 export const getToken = () => {
-  return Cookies.get("token");
+  return Cookies.get('token');
 };
 
 export const getDecodedToken = () => {
   const token = getToken();
   if (token) {
-    try {
-      const decodedToken = jwt_decode(token);
-      return decodedToken;
-    } catch (error) {
-      console.log('Error decoding token:', error.message);
-    }
+    return jwt_decode(token);
   }
   return null;
 };
+
+
+// export const tokenRefresh = (refreshToken) => {
+//   console.log("refreshhh");
+//   return (dispatch) => {
+//     return axios
+//       .post(
+//         API_URL + "token",
+//         { refreshToken }
+//       )
+//       .then((response) => {
+//         if (response.data) {
+//           dispatch(
+//             authenticationSuccess(
+//               response.data.userId,
+//               response.data.accessToken,
+//               response.data.refreshToken
+//             )
+//           );
+//         }
+//       })
+//       .catch((error) => {
+//         console.log(error.message);
+//         dispatch(authenticationFailure(error.message));
+//       });
+//   };
+// };
+// const startTokenRefresh = (refreshToken) => {
+//   setInterval(() => {
+//     store.dispatch(tokenRefresh(refreshToken));
+//   }, 12000); // call every 4 minutes (240000 milliseconds)
+// };
 
 export const authenticationSuccess = (userId, token, refreshToken) => {
   return {
@@ -108,20 +112,6 @@ export const authenticationSuccess = (userId, token, refreshToken) => {
     payload: { userId, token, refreshToken },
   };
 };
-
-export const getUserIdFromToken = (token) => {
-  if (token) {
-    try {
-      const decodedToken = jwt_decode(token);
-      const userId = decodedToken.userId; // Retrieve the userId from the decoded token
-      return userId;
-    } catch (error) {
-      console.log('Error decoding token:', error.message);
-    }
-  }
-  return null;
-};
-
 
 export const authenticationFailure = (error) => {
   return {
@@ -131,21 +121,18 @@ export const authenticationFailure = (error) => {
 };
 
 export const logout = () => {
-  localStorage.removeItem("role");
-  localStorage.removeItem("token");
+  Cookies.remove("token");
   return {
     type: "LOGOUT",
   };
-};
+}
 
 export const getRole = async (token) => {
-  try {
-    const response = await axios.get(API_URL + "role?token=" + token);
+  return axios.get(API_URL + "role?token=" + token).then((response) => {
     if (response.data) {
-      const role = response.data;
-      return role;
+      localStorage.setItem("role", response.data);
     }
-  } catch (error) {
+  }).catch((error) => {
     console.log(error.message);
-  }
-};
+  });
+}

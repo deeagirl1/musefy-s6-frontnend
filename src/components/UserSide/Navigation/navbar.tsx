@@ -1,52 +1,51 @@
-import React, { useState, useEffect, useCallback } from "react";
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  IconButton,
-  Menu,
-  MenuItem,
-  InputBase,
-} from "@mui/material";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import SearchIcon from "@mui/icons-material/Search";
-import ClearIcon from "@mui/icons-material/Clear";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useCallback } from 'react';
+import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem, InputBase } from '@mui/material';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import SearchIcon from '@mui/icons-material/Search';
+import ClearIcon from '@mui/icons-material/Clear';
+import { useNavigate } from 'react-router-dom';
+import { getToken, logout } from '../../../services/AuthService';
 
-const NavbarUser = () => {
-  const navigate = useNavigate();
+const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [isSignedIn, setIsSignedIn] = useState<boolean>(false);
+  const [isSignedIn, setIsSignedIn] = useState<boolean>(false); // Initial sign-in status
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
+  const token = getToken();
+  console.log(token);   
 
   useEffect(() => {
     const checkSignInStatus = () => {
-      const accessToken = document.cookie
-        .split(";")
-        .map((cookie) => cookie.trim())
-        .find((cookie) => cookie.startsWith("access_token="));
-
-      setIsSignedIn(accessToken !== undefined);
+      try {
+        const token = getToken();
+        if (token) {
+          setIsSignedIn(true); // Update the sign-in status to true
+        } else {
+          setIsSignedIn(false); // Update the sign-in status to false
+        }
+      } catch (error: any) {
+        // Handle sign-in error
+        console.log(error.message);
+      }
     };
 
     checkSignInStatus();
-  }, []);
+  }, [token]);
 
   const handleSignIn = useCallback(() => {
     try {
-      if (isSignedIn) {
-        setIsSignedIn(false);
+      if (token) {
+        setIsSignedIn(true);
       } else {
         setIsSignedIn(false); // Update the sign-in status to false
-        navigate("/login");
+        window.location.href = '/login'; // Redirect to the login page
       }
+
       // Additional logic if needed
     } catch (error: any) {
       // Handle sign-in error
       console.log(error.message);
     }
-  }, [isSignedIn]);
+  }, []);
 
   const handleSearchClick = () => {
     setIsSearchOpen(true);
@@ -63,13 +62,15 @@ const NavbarUser = () => {
 
   const handleSignOut = async () => {
     try {
-      // Perform the sign-out logic here
-      // Example: make an API request to sign out the user
-
-      setIsSignedIn(false);
-      setAnchorEl(null);
-      navigate("/");
-      window.location.reload();
+      const response = logout();
+      if (await response) {
+        setIsSignedIn(false);
+        setAnchorEl(null);
+        window.location.href = '/';
+      } else {
+        // Handle sign-out failure
+        // For example, display an error message or perform error handling
+      }
     } catch (error) {
       // Handle sign-out error
       // For example, display an error message or perform error handling
@@ -85,55 +86,31 @@ const NavbarUser = () => {
   };
 
   return (
-    <AppBar position="static" style={{ backgroundColor: "#000000" }}>
-      <Toolbar
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <Typography variant="h6" style={{ marginRight: "20px" }}>
+    <AppBar position="static" style={{ backgroundColor: '#000000' }}>
+      <Toolbar style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Typography variant="h6" style={{ marginRight: '20px' }}>
             Musefy
           </Typography>
-          <Button color="inherit" onClick={() => (window.location.href = "/")}>
+          <Button color="inherit" onClick={() => (window.location.href = '/')}>
             Home
           </Button>
-          <Button
-            color="inherit"
-            onClick={() => (window.location.href = "/songs")}
-          >
+          <Button color="inherit" onClick={() => (window.location.href = '/songs')}>
             Songs
           </Button>
-          <Button
-            color="inherit"
-            onClick={() => (window.location.href = "/radio")}
-          >
+          <Button color="inherit" onClick={() => (window.location.href = '/radio')}>
             Radio
           </Button>
-          <Button
-            color="inherit"
-            onClick={() => (window.location.href = "/browse")}
-          >
+          <Button color="inherit" onClick={() => (window.location.href = '/browse')}>
             Browse
           </Button>
         </div>
-        <div style={{ display: "flex", alignItems: "center" }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           {isSearchOpen ? (
-            <form
-              onSubmit={handleSearchSubmit}
-              style={{ display: "flex", alignItems: "center" }}
-            >
+            <form onSubmit={handleSearchSubmit} style={{ display: 'flex', alignItems: 'center' }}>
               <InputBase
                 placeholder="Search..."
-                style={{
-                  backgroundColor: "#fff",
-                  borderRadius: "20px",
-                  width: "400px",
-                  padding: "4px 8px",
-                  marginRight: "8px",
-                }}
+                style={{ backgroundColor: '#fff', borderRadius: '20px', width: '400px', padding: '4px 8px', marginRight: '8px' }}
               />
               <IconButton color="inherit" type="submit">
                 <SearchIcon />
@@ -147,7 +124,7 @@ const NavbarUser = () => {
               <IconButton color="inherit" onClick={handleSearchClick}>
                 <SearchIcon />
               </IconButton>
-              {isSignedIn ? (
+              {token !== undefined ? (
                 <>
                   <IconButton color="inherit" onClick={handleAccountClick}>
                     <AccountCircleIcon />
@@ -158,19 +135,15 @@ const NavbarUser = () => {
                     open={Boolean(anchorEl)}
                     onClose={handleAccountClose}
                     anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "right",
+                      vertical: 'bottom',
+                      horizontal: 'right',
                     }}
                     transformOrigin={{
-                      vertical: "top",
-                      horizontal: "right",
+                      vertical: 'top',
+                      horizontal: 'right',
                     }}
                   >
-                    <MenuItem
-                      onClick={() => (window.location.href = "/my-account")}
-                    >
-                      Account
-                    </MenuItem>
+                    <MenuItem onClick={() => (window.location.href = '/my-account')}>Account</MenuItem>
                     <MenuItem onClick={handleSignOut}>Logout</MenuItem>
                   </Menu>
                 </>
@@ -187,4 +160,4 @@ const NavbarUser = () => {
   );
 };
 
-export default NavbarUser;
+export default Navbar;

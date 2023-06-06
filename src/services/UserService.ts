@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { User, UserFavouriteSongs, UserInteractionCount } from '../types';
-import { getDecodedToken, getToken, signOut } from './AuthService';
+import { getDecodedToken, getToken, logout } from './AuthService';
+import Cookies from "js-cookie";
 
 const API_URL = "http://localhost:8085/api/users";
 
@@ -33,16 +34,16 @@ const userService = {
           Authorization: `Bearer ${token}`,
         },
       };
-  
       await axios.delete(`${API_URL}/delete?userId=${userId}`, config);
-      signOut();
+      Cookies.remove("token");
       return true;
     } catch (error) {
       console.error(error);
       return false;
     }
   },
-  downloadData: async (): Promise<string | null> => {
+
+   downloadData: async (): Promise<string | null> => {
     try {
       const decodedToken = getDecodedToken() as { userId: string };
       if (decodedToken) {
@@ -52,16 +53,21 @@ const userService = {
           headers: {
             Authorization: `Bearer ${getToken()}`,
           },
+          responseType: 'blob', // Set the response type to blob
         };
   
-        const response = await axios.get<string>(`${API_URL}/${userId}/download-data`, config);
+        const response = await axios.get<Blob>(`${API_URL}/${userId}/download-data`, config);
         if (response.data) {
-          const downloadUrl = response.data;
+          const downloadUrl = window.URL.createObjectURL(new Blob([response.data]));
           const link = document.createElement('a');
           link.href = downloadUrl;
           link.target = '_blank';
+          link.download = `user_data_${userId}.zip`; // Set the desired filename
           link.click();
           
+          // Clean up the created URL
+          window.URL.revokeObjectURL(downloadUrl);
+  
           // Wait for the download to finish
           await new Promise(resolve => setTimeout(resolve, 2000)); // Adjust the timeout as needed
   

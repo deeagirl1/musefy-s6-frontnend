@@ -4,7 +4,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useNavigate } from 'react-router-dom';
-import { getToken, signOut } from '../../../services/AuthService';
+import { getToken, logout } from '../../../services/AuthService';
 
 const AdminNavbar = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -43,8 +43,8 @@ const AdminNavbar = () => {
 
   const handleSignOut = async () => {
     try {
-      const response = signOut();
-      if ((await response).success) {
+      const response = logout();
+      if (await response) {
         setIsSignedIn(false);
         setAnchorEl(null);
         window.location.href = '/';

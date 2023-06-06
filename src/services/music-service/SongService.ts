@@ -1,24 +1,29 @@
 import axios from 'axios';
 import { Song } from '../../types';
 
-const API_URL = "http://localhost:8087/api/songs";
+const API_URL = "http://localhost:8085/api/songs";
 
 const songService = {
-  getSongs: async (page: number = 0, size: number = 20): Promise<{ songs: Song[], totalPages: number }> => {
-    try {
-      const response = await axios.get(`${API_URL}?page=${page}&size=${size}`);
-      return {
-        songs: response.data.content,
-        totalPages: response.data.totalPages
-      };
-    } catch (error) {
-      console.error(error);
-      return {
-        songs: [],
-        totalPages: 0
-      };
-    }
-  },
+    getSongs: async (page = 0, size = 4) => {
+      try {
+        console.log(`Fetching page ${page} with size ${size}`);
+        const url = `${API_URL}?page=${page}&size=${size}`;
+        console.log(`URL: ${url}`);
+        const response = await axios.get(url);
+        console.log(`Response: ${JSON.stringify(response.data)}`);
+        return {
+          songs: response.data.content,
+          totalPages: response.data.totalPages
+        };
+      } catch (error) {
+        console.error(`Error fetching songs: ${error}`);
+        return {
+          songs: [],
+          totalPages: 0
+        };
+      }
+    },
+  
     getSongById: async (id: string): Promise<Song | null> => {
       try {
         const response = await axios.get(`${API_URL}/${id}`);
