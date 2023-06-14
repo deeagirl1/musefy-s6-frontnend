@@ -1,6 +1,5 @@
-import { Home } from '@mui/icons-material';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import PlaylistDetailPage from './components/UserSide/Explore/PlaylistDetailPage';
 import UserManagementPage from './pages/AdminSide/UserManagementPage';
 import BrowsePage from './pages/BrowsePage';
@@ -9,6 +8,7 @@ import LoginPage from './pages/LoginPage';
 import MyAccountPage from './pages/MyAccountPage';
 import NotFoundPage from './pages/NotFound/NotFoundPage';
 import RegisterPage from './pages/RegisterPage';
+import Home from './pages/HomePage';
 import Navbar from './components/UserSide/Navigation/navbar';
 
 function App() {

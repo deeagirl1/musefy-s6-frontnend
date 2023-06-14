@@ -3,7 +3,6 @@ import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem, InputB
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
-import { useNavigate } from 'react-router-dom';
 import { getToken, logout } from '../../../services/AuthService';
 
 const AdminNavbar = () => {
