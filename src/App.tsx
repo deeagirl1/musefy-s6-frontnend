@@ -4,7 +4,7 @@ import PlaylistDetailPage from './components/UserSide/Explore/PlaylistDetailPage
 import UserManagementPage from './pages/AdminSide/UserManagementPage';
 import BrowsePage from './pages/BrowsePage';
 import FavouriteSongsPage from './pages/FavouriteSongsPage';
-import LoginPage from './pages/LoginPage';
+import LoginPage from './pages/loginPage';
 import MyAccountPage from './pages/MyAccountPage';
 import NotFoundPage from './pages/NotFound/NotFoundPage';
 import RegisterPage from './pages/RegisterPage';
