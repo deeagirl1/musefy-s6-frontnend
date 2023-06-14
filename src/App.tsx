@@ -9,7 +9,7 @@ import NotFoundPage from './pages/NotFound/NotFoundPage';
 import RegisterPage from './pages/RegisterPage';
 import Navbar from './components/UserSide/Navigation/navbar';
 import LoginPage from './pages/loginPage';
-import Home from './pages/homepage';
+import Home from './pages/HomePage';
 function App() {
     // const [userRole, setUserRole] = useState('');
 
