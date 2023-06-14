@@ -7,7 +7,7 @@ The purpose of this app is to provide users with a seamless and intuitive music 
 # Technologies Used
 - SpringBoot: Backend microservices are developed using SpringBoot, a Java-based framework for building scalable and performant web applications.
 
-- React: Frontend is developed using React, a popular JavaScript library for building user interfaces.
+- React: Frontend is developed using React, a popular JavaScript library for building user interfaces, with TypeScript.
 
 - Docker: The app is packaged as Docker containers to facilitate easy deployment and scaling.
 
