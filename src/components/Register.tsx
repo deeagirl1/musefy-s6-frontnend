@@ -1,22 +1,9 @@
 import React, { useState } from "react";
-import {
-  Container,
-  Typography,
-  TextField,
-  Button,
-  FormControlLabel,
-  Checkbox,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  useMediaQuery,
-} from "@mui/material";
 import { registerUser } from "../services/AuthService";
 import { useNavigate } from "react-router-dom";
 import { Login } from "@mui/icons-material";
 import { connect } from "react-redux";
+import { useMediaQuery, Container, Typography, TextField, FormControlLabel, Checkbox, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
 
 export const Register: React.FC = (props: any) => {
   const [username, setUsername] = useState<string>("");

@@ -1,8 +1,8 @@
 import React from "react";
-import { Box, Typography, Button } from "@mui/material";
 import userService from "../../../services/UserService";
 import { getDecodedToken } from "../../../services/AuthService";
 import { useNavigate } from "react-router-dom";
+import { Box, Typography, Button } from "@mui/material";
 
 
 const SecuritySection: React.FC = () => {

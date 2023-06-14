@@ -1,5 +1,4 @@
 import { Typography, Box, Grid, Card, Button } from "@mui/material";
-import Carousel from "react-material-ui-carousel";
 import { Album, Playlist, Song } from "../../../types";
 import { useState, useEffect } from "react";
 import AlbumCard from "../Explore/AlbumCard";

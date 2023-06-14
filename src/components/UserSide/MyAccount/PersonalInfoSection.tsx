@@ -1,5 +1,5 @@
+import { Box, Typography, Grid, TextField, Button } from "@mui/material";
 import React from "react";
-import { Box, Typography, TextField, Grid, Button } from "@mui/material";
 
 const PersonalInfoSection: React.FC = () => {
 

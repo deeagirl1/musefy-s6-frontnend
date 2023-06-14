@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Container, Typography, TextField, Button } from "@mui/material";
-import { ThunkDispatch, AnyAction } from "@reduxjs/toolkit";
 import { useNavigate, Link } from "react-router-dom";
 import {
   authenticateUser,
@@ -8,6 +6,8 @@ import {
   authenticationSuccess,
 } from "../services/AuthService";
 import { connect, useDispatch } from "react-redux";
+import { Container, Typography, TextField, Button } from "@mui/material";
+import { ThunkDispatch, AnyAction } from "@reduxjs/toolkit";
 
 const Login: React.FC = (props: any) => {
   const [username, setUsername] = useState<string>("");

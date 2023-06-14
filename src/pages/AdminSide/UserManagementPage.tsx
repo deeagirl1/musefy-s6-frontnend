@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Typography, Paper } from "@mui/material";
 import AddUserForm from "../../components/AdminSide/UsersTable/AddUserForm";
 import UserTable from "../../components/AdminSide/UsersTable/UserTable";
 import { User } from "../../types";
+import { Typography, Paper } from "@mui/material";
 
 const UserManagementPage = () => {
   const [users, setUsers] = useState<User[]>([]);
