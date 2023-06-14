@@ -3,7 +3,7 @@ import { User, UserFavouriteSongs, UserInteractionCount } from '../types';
 import { getDecodedToken, getToken, logout } from './AuthService';
 import Cookies from "js-cookie";
 
-const API_URL = "http://localhost:8085/api/users";
+const API_URL = " http://127.0.0.1:62696/api/users";
 
 const userService = {
   getUsers: async (): Promise<User[]> => {
@@ -43,36 +43,27 @@ const userService = {
     }
   },
 
-   downloadData: async (): Promise<string | null> => {
+  downloadData: async (): Promise<string | null> => {
     try {
-      const decodedToken = getDecodedToken() as { userId: string };
-      if (decodedToken) {
-        const userId = decodedToken.userId;
+      const response = await axios.get<Blob>(`${API_URL}/download-data`, {
+        responseType: 'blob', // Set the response type to blob
+      });
   
-        const config: AxiosRequestConfig = {
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
-          },
-          responseType: 'blob', // Set the response type to blob
-        };
+      if (response.data) {
+        const downloadUrl = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.target = '_blank';
+        link.download = `user_data.zip`; // Set the desired filename
+        link.click();
   
-        const response = await axios.get<Blob>(`${API_URL}/${userId}/download-data`, config);
-        if (response.data) {
-          const downloadUrl = window.URL.createObjectURL(new Blob([response.data]));
-          const link = document.createElement('a');
-          link.href = downloadUrl;
-          link.target = '_blank';
-          link.download = `user_data_${userId}.zip`; // Set the desired filename
-          link.click();
-          
-          // Clean up the created URL
-          window.URL.revokeObjectURL(downloadUrl);
+        // Clean up the created URL
+        window.URL.revokeObjectURL(downloadUrl);
   
-          // Wait for the download to finish
-          await new Promise(resolve => setTimeout(resolve, 2000)); // Adjust the timeout as needed
+        // Wait for the download to finish
+        await new Promise(resolve => setTimeout(resolve, 2000)); // Adjust the timeout as needed
   
-          return downloadUrl;
-        }
+        return downloadUrl;
       }
     } catch (error) {
       console.error(error);
@@ -80,6 +71,7 @@ const userService = {
   
     return null;
   },
+  
   
   addSongToFavouriteList: async (userFavoriteSongDTO: UserFavouriteSongs): Promise<User | null> => {
     try {

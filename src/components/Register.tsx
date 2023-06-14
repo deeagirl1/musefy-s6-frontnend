@@ -15,8 +15,10 @@ import {
 } from "@mui/material";
 import { registerUser } from "../services/AuthService";
 import { useNavigate } from "react-router-dom";
+import { Login } from "@mui/icons-material";
+import { connect } from "react-redux";
 
-export const Register: React.FC = () => {
+export const Register: React.FC = (props: any) => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -64,11 +66,11 @@ export const Register: React.FC = () => {
       lastName &&
       termsAccepted
     ) {
-      registerUser(username, password, email, firstName, lastName)
-        .then((response) => {
+      props.registerUser(username, password, email, firstName, lastName)
+        .then((response: any) => {
           navigate("/");
         })
-        .catch((error) => {
+        .catch((error: any) => {
           console.log(error);
         });
     }
@@ -297,3 +299,9 @@ export const Register: React.FC = () => {
     </Container>
   );
 };
+
+const mapDispatchToProps = {
+  registerUser,
+};
+
+export default connect(null, mapDispatchToProps)(Register);

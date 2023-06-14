@@ -2,64 +2,65 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
 
-const API_URL = "http://localhost:8085/api/auth/";
+const API_URL = "http://127.0.0.1:62696/api/auth/";
+
+const cookieOptions = {
+  expires: 1, // 1 day
+  secure: false, // Set to true for HTTPS only
+  sameSite: 'strict',
+};
 
 export const authenticateUser = (username, password) => {
   return (dispatch) => {
     return axios
-      .post(API_URL + '/login', {
+      .post(API_URL + "login", {
         username,
         password,
       })
       .then((response) => {
-        if (response.data) {
-          const accessToken = response.data.accessToken;
-          const cookieOptions = {
-            expires: 1, // 1 day
-            secure: false, // Set to true for HTTPS only
-            // sameSite: 'strict',
-            // Additional cookie options if needed
-          };
-
-          // Set the token as a cookie
-          Cookies.set('token', accessToken, cookieOptions);
-          dispatch(authenticationSuccess(response.data.userId, accessToken));
-          return { success: true }; // Return success status and access token
-        } else {
-          return { success: false }; // Return failure status
-        }
+          dispatch(
+            authenticationSuccess(
+              response.data.userId,
+              response.data.accessToken,
+              response.data.refreshToken,
+            )
+          );
+          Cookies.set("accessToken", response.data.accessToken, cookieOptions);
+          Cookies.set(
+            "refreshToken",
+            response.data.refreshToken,
+            cookieOptions
+          );
+          Cookies.set("userId", response.data.userId, cookieOptions);
+          return response.data;
       })
       .catch((error) => {
         dispatch(authenticationFailure(error.message));
-        return { success: false }; // Return failure status
       });
   };
 };
 
 export const registerUser = (username, password, email, firstName, lastName) => {
-  return axios.post(API_URL + "register", {
-    username,
-    password,
-    email,
-    firstName,
-    lastName
-  })
-    .then((response) => {
-      if (response.data) {
-        return response.data;
-      }
+  return (dispatch) => {
+    return axios.post(API_URL + "register", {
+      username,
+      password,
+      email,
+      firstName,
+      lastName
     })
-    .catch((error) => {
-      console.log(error.message);
-    }
-    );
-}
-
-
-export const checkIsSignedIn = () => {
-  return axios.get(API_URL + '/check-signed-in')
-    .then((response) => response.status === 200)
-    .catch(() => false);
+      .then((response) => {
+        if (response.data) {
+          dispatch(authenticationSuccess(response.data.userId, response.data.accessToken, response.data.refreshToken));
+          return { success: true }; // Return success status and access token
+        }
+      })
+      .catch((error) => {
+        dispatch(authenticationFailure(error.message));
+        return { success: false }; // Return failure status
+      }
+      );
+  }
 };
 
 export const getToken = () => {
@@ -106,10 +107,10 @@ export const getDecodedToken = () => {
 //   }, 12000); // call every 4 minutes (240000 milliseconds)
 // };
 
-export const authenticationSuccess = (userId, token, refreshToken) => {
+export const authenticationSuccess = (userId, accessToken, refreshToken) => {
   return {
     type: "AUTHENTICATION_SUCCESS",
-    payload: { userId, token, refreshToken },
+    payload: { userId, accessToken, refreshToken },
   };
 };
 

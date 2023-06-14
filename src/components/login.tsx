@@ -5,10 +5,11 @@ import { useNavigate, Link } from "react-router-dom";
 import {
   authenticateUser,
   authenticationFailure,
+  authenticationSuccess,
 } from "../services/AuthService";
-import { useDispatch } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 
-export const Login: React.FC = (props: any) => {
+const Login: React.FC = (props: any) => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
@@ -27,11 +28,11 @@ export const Login: React.FC = (props: any) => {
     event.preventDefault();
     if (username && password) {
       try {
-        const response = await dispatch(authenticateUser(username, password));
-        if (response.success) {
-          console.log(response)
+        const response = await props.authenticateUser(username, password);
+        console.log(response);
+        if (response) {
+          dispatch(authenticationSuccess(response.userId, response.accessToken, response.refreshToken));
           navigate("/browse");
-          window.location.reload();
         } else {
           dispatch(authenticationFailure("Invalid username or password"));
         }
@@ -84,3 +85,9 @@ export const Login: React.FC = (props: any) => {
     </Container>
   );
 };
+
+const mapDispatchToProps = {
+  authenticateUser,
+};
+
+export default connect(null, mapDispatchToProps)(Login);

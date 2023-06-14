@@ -1,7 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Typography, TextField, Grid, Button } from "@mui/material";
+import { useSelector } from "react-redux";
 
 const PersonalInfoSection: React.FC = () => {
+
+  const userId = useSelector((state : any ) => state.authentication.userId);
+
+  useEffect(() => {
+    console.log(userId);
+    
+  }, []);
   return (
     <Box my={4}>
       <Typography variant="h2">Personal Information</Typography>

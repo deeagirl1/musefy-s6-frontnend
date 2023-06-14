@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Playlist } from '../../types';
 
-const API_URL = "http://localhost:8085/api/playlists";
+const API_URL = "http://127.0.0.1:62696/api/playlists";
 
 const playlistService = {
   getPlaylists: async (): Promise<Playlist[]> => {

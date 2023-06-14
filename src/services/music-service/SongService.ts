@@ -1,22 +1,18 @@
 import axios from 'axios';
 import { Song } from '../../types';
 
-const API_URL = "http://localhost:8085/api/songs";
+const API_URL = "http://127.0.0.1:62696/api/songs";
 
 const songService = {
     getSongs: async (page = 0, size = 4) => {
       try {
-        console.log(`Fetching page ${page} with size ${size}`);
         const url = `${API_URL}?page=${page}&size=${size}`;
-        console.log(`URL: ${url}`);
         const response = await axios.get(url);
-        console.log(`Response: ${JSON.stringify(response.data)}`);
         return {
           songs: response.data.content,
           totalPages: response.data.totalPages
         };
       } catch (error) {
-        console.error(`Error fetching songs: ${error}`);
         return {
           songs: [],
           totalPages: 0

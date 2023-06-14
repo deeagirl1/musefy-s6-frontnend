@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { Album } from '../../types';
 
-const API_URL = "http://localhost:8085/api/albums";
+const API_URL = " http://127.0.0.1:62696/api/albums";
 
 abstract class AlbumService {
   static async getAlbums(): Promise<Album[]> {

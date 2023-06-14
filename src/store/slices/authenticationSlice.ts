@@ -1,7 +1,7 @@
 interface AuthenticationState {
     authenticated: boolean;
     userId: string | null;
-    token: string | null;
+    accessToken: string | null;
     refreshToken: string | null;
     error: string | null;
   }
@@ -9,7 +9,7 @@ interface AuthenticationState {
   const initialState: AuthenticationState = {
     authenticated: false,
     userId: null,
-    token: null,
+    accessToken: null,
     refreshToken: null,
     error: null,
   };
@@ -17,7 +17,7 @@ interface AuthenticationState {
   type AuthenticationAction =
     | {
       type: "AUTHENTICATION_SUCCESS";
-      payload: { userId: string; token: string; refreshToken: string };
+      payload: { userId: string; accessToken: string; refreshToken: string };
     }
     | { type: "AUTHENTICATION_FAILURE"; payload: string }
     | { type: "LOGOUT" };
@@ -26,13 +26,14 @@ interface AuthenticationState {
     state: AuthenticationState = initialState,
     action: AuthenticationAction
   ): AuthenticationState => {
+
     switch (action.type) {
       case "AUTHENTICATION_SUCCESS":
         return {
           ...state,
           authenticated: true,
           userId: action.payload.userId,
-          token: action.payload.token,
+          accessToken: action.payload.accessToken,
           refreshToken: action.payload.refreshToken,
           error: null,
         };
@@ -41,7 +42,7 @@ interface AuthenticationState {
           ...state,
           authenticated: false,
           userId: null,
-          token: null,
+          accessToken: null,
           refreshToken: null,
           error: action.payload,
         };

@@ -5,18 +5,22 @@ import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useNavigate } from 'react-router-dom';
 import { getToken, logout } from '../../../services/AuthService';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isSignedIn, setIsSignedIn] = useState<boolean>(false); // Initial sign-in status
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
-  const token = getToken();
-  console.log(token);   
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const token = useSelector((state : any) => state.authentication.accessToken);
+  const handleSignOut =  () => {
+    dispatch(logout())
+  }
 
   useEffect(() => {
     const checkSignInStatus = () => {
       try {
-        const token = getToken();
         if (token) {
           setIsSignedIn(true); // Update the sign-in status to true
         } else {
@@ -31,21 +35,9 @@ const Navbar = () => {
     checkSignInStatus();
   }, [token]);
 
-  const handleSignIn = useCallback(() => {
-    try {
-      if (token) {
-        setIsSignedIn(true);
-      } else {
-        setIsSignedIn(false); // Update the sign-in status to false
-        window.location.href = '/login'; // Redirect to the login page
-      }
-
-      // Additional logic if needed
-    } catch (error: any) {
-      // Handle sign-in error
-      console.log(error.message);
-    }
-  }, []);
+  const handleSignIn = () => {
+      navigate('/login');
+  };
 
   const handleSearchClick = () => {
     setIsSearchOpen(true);
@@ -60,22 +52,22 @@ const Navbar = () => {
     // Handle search submit logic
   };
 
-  const handleSignOut = async () => {
-    try {
-      const response = logout();
-      if (await response) {
-        setIsSignedIn(false);
-        setAnchorEl(null);
-        window.location.href = '/';
-      } else {
-        // Handle sign-out failure
-        // For example, display an error message or perform error handling
-      }
-    } catch (error) {
-      // Handle sign-out error
-      // For example, display an error message or perform error handling
-    }
-  };
+  // const handleSignOut = async () => {
+  //   try {
+  //     const response = logout();
+  //     if (await response) {
+  //       setIsSignedIn(false);
+  //       setAnchorEl(null);
+  //       window.location.href = '/';
+  //     } else {
+  //       // Handle sign-out failure
+  //       // For example, display an error message or perform error handling
+  //     }
+  //   } catch (error) {
+  //     // Handle sign-out error
+  //     // For example, display an error message or perform error handling
+  //   }
+  // };
 
   const handleAccountClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -124,7 +116,7 @@ const Navbar = () => {
               <IconButton color="inherit" onClick={handleSearchClick}>
                 <SearchIcon />
               </IconButton>
-              {token !== undefined ? (
+              {token ? (
                 <>
                   <IconButton color="inherit" onClick={handleAccountClick}>
                     <AccountCircleIcon />
