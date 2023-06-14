@@ -52,7 +52,7 @@ const VideoBackground = styled.video`
   z-index: -1;
 `;
 
-const Home: React.FC = () => {
+const Homepage: React.FC = () => {
   return (
     <HomeWrapper>
       <VideoBackground autoPlay muted loop>
@@ -68,4 +68,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default Homepage;

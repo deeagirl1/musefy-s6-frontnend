@@ -9,7 +9,9 @@ import NotFoundPage from './pages/NotFound/NotFoundPage';
 import RegisterPage from './pages/RegisterPage';
 import Navbar from './components/UserSide/Navigation/navbar';
 import LoginPage from './pages/loginPage';
-import Home from './pages/homePage';
+import Homepage from './pages/homePage';
+
+
 function App() {
     // const [userRole, setUserRole] = useState('');
 
@@ -37,7 +39,7 @@ function App() {
         )} */}
         <Navbar />
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Homepage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/browse" element={<BrowsePage />} />
