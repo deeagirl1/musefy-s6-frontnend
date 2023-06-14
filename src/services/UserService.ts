@@ -1,6 +1,6 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import axios from 'axios';
 import { User, UserFavouriteSongs, UserInteractionCount } from '../types';
-import { getDecodedToken, getToken, logout } from './AuthService';
+import { getToken} from './AuthService';
 import Cookies from "js-cookie";
 
 const API_URL = " http://127.0.0.1:62696/api/users";

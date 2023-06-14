@@ -8,8 +8,6 @@ import RegisterPage from './pages/RegisterPage';
 import NotFoundPage from './pages/NotFound/NotFoundPage';
 import MyAccountPage from './pages/MyAccountPage';
 import FavouriteSongsPage from './pages/FavouriteSongsPage';
-import { useState, useEffect } from 'react';
-import { getRole } from './services/AuthService';
 // import Navbar from './components/AdminSide/Navbar/navbar';
 import UserManagementPage from './pages/AdminSide/UserManagementPage';
 import PlaylistDetailPage from './components/UserSide/Explore/PlaylistDetailPage';
