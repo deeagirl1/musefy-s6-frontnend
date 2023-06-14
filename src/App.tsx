@@ -1,16 +1,15 @@
 import './App.css';
 import NavbarUser from './components/UserSide/Navigation/navbar';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Home from './pages/HomePage';
 import BrowsePage from './pages/BrowsePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import NotFoundPage from './pages/NotFound/NotFoundPage';
 import MyAccountPage from './pages/MyAccountPage';
 import FavouriteSongsPage from './pages/FavouriteSongsPage';
-// import Navbar from './components/AdminSide/Navbar/navbar';
 import UserManagementPage from './pages/AdminSide/UserManagementPage';
 import PlaylistDetailPage from './components/UserSide/Explore/PlaylistDetailPage';
+import Home from './pages/HomePage';
 
 function App() {
     // const [userRole, setUserRole] = useState('');
