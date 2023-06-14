@@ -9,7 +9,7 @@ import NotFoundPage from './pages/NotFound/NotFoundPage';
 import RegisterPage from './pages/RegisterPage';
 import Navbar from './components/UserSide/Navigation/navbar';
 import LoginPage from './pages/loginPage';
-import Homepage from './pages/homePage';
+import Homepage from './pages/homepage';
 
 
 function App() {
