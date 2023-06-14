@@ -1,15 +1,15 @@
+import { Home } from '@mui/icons-material';
 import './App.css';
-import NavbarUser from './components/UserSide/Navigation/navbar';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import BrowsePage from './pages/BrowsePage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import NotFoundPage from './pages/NotFound/NotFoundPage';
-import MyAccountPage from './pages/MyAccountPage';
-import FavouriteSongsPage from './pages/FavouriteSongsPage';
-import UserManagementPage from './pages/AdminSide/UserManagementPage';
 import PlaylistDetailPage from './components/UserSide/Explore/PlaylistDetailPage';
-import Home from './pages/HomePage';
+import UserManagementPage from './pages/AdminSide/UserManagementPage';
+import BrowsePage from './pages/BrowsePage';
+import FavouriteSongsPage from './pages/FavouriteSongsPage';
+import LoginPage from './pages/LoginPage';
+import MyAccountPage from './pages/MyAccountPage';
+import NotFoundPage from './pages/NotFound/NotFoundPage';
+import RegisterPage from './pages/RegisterPage';
+import Navbar from './components/UserSide/Navigation/navbar';
 
 function App() {
     // const [userRole, setUserRole] = useState('');
@@ -36,7 +36,7 @@ function App() {
         ) : (
           <NavbarUser />
         )} */}
-        <NavbarUser />
+        <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<LoginPage />} />
