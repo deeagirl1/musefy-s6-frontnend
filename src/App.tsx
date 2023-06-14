@@ -4,12 +4,12 @@ import PlaylistDetailPage from './components/UserSide/Explore/PlaylistDetailPage
 import UserManagementPage from './pages/AdminSide/UserManagementPage';
 import BrowsePage from './pages/BrowsePage';
 import FavouriteSongsPage from './pages/FavouriteSongsPage';
-import LoginPage from './pages/loginPage';
 import MyAccountPage from './pages/MyAccountPage';
 import NotFoundPage from './pages/NotFound/NotFoundPage';
 import RegisterPage from './pages/RegisterPage';
-import Home from './pages/HomePage';
+import Home from './pages/homePage';
 import Navbar from './components/UserSide/Navigation/navbar';
+import LoginPage from './pages/loginPage';
 
 function App() {
     // const [userRole, setUserRole] = useState('');
