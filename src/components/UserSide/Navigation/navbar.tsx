@@ -54,12 +54,6 @@ const Navbar = () => {
           <Button color="inherit" onClick={() => (window.location.href = '/')}>
             Home
           </Button>
-          <Button color="inherit" onClick={() => (window.location.href = '/songs')}>
-            Songs
-          </Button>
-          <Button color="inherit" onClick={() => (window.location.href = '/radio')}>
-            Radio
-          </Button>
           <Button color="inherit" onClick={() => (window.location.href = '/browse')}>
             Browse
           </Button>
@@ -85,6 +79,9 @@ const Navbar = () => {
               </IconButton>
               {token ? (
                 <>
+                  <Button color="inherit" onClick={() => navigate("/my-favourite-songs")}>
+                     My Favourite Songs
+                  </Button>
                   <IconButton color="inherit" onClick={handleAccountClick}>
                     <AccountCircleIcon />
                   </IconButton>

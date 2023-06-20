@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { User, UserFavouriteSongs, UserInteractionCount } from '../types';
-import { getToken} from './AuthService';
+import { getToken, logout} from './AuthService';
 import Cookies from "js-cookie";
 
-const API_URL = " http://127.0.0.1:62696/api/users";
+const API_URL = " http://34.91.28.46/api/users";
 
 const userService = {
   getUsers: async (): Promise<User[]> => {
@@ -31,31 +31,39 @@ const userService = {
   
       const config = {
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
         },
       };
-      await axios.delete(`${API_URL}/delete?userId=${userId}`, config);
-      Cookies.remove("token");
-      return true;
+      const response = await axios.delete(`${API_URL}/delete?userId=${userId}`, config);
+      if (response.status === 200) {
+        logout();
+        return true;
+      }
+      return false;
     } catch (error) {
       console.error(error);
       return false;
     }
   },
 
-  downloadData: async (): Promise<string | null> => {
+  downloadData: async (userId: string): Promise<string | null> => {
     try {
-      const response = await axios.get<Blob>(`${API_URL}/download-data`, {
-        responseType: 'blob', // Set the response type to blob
+      const token = getToken();
+      const response = await axios.get<Blob>(`${API_URL}/${userId}/download-data`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        responseType: 'blob',
       });
   
       if (response.data) {
         const downloadUrl = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement('a');
         link.href = downloadUrl;
-        link.target = '_blank';
-        link.download = `user_data.zip`; // Set the desired filename
+        link.setAttribute('download', `user_data_${userId}.zip`); // Manually specify the filename
+        document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link);
   
         // Clean up the created URL
         window.URL.revokeObjectURL(downloadUrl);
@@ -65,13 +73,17 @@ const userService = {
   
         return downloadUrl;
       }
-    } catch (error) {
-      console.error(error);
+    } catch (error:any) {
+      if (error.response && error.response.data) {
+        console.error('Error downloading the file:', error.response.data);
+      } else {
+        console.error('Error:', error);
+      }
     }
   
-    return null;
+    return null;;
   },
-  
+
   
   addSongToFavouriteList: async (userFavoriteSongDTO: UserFavouriteSongs): Promise<User | null> => {
     try {
@@ -101,7 +113,7 @@ const userService = {
         },
       };
   
-      const response = await axios.get(`${API_URL}/${userId}/favoritesongs`, config);
+      const response = await axios.get(`${API_URL}/${userId}/favorite-songs`, config);
       return response.data;
     } catch (error) {
       console.error(error);

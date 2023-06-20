@@ -10,6 +10,8 @@ import RegisterPage from './pages/RegisterPage';
 import Navbar from './components/UserSide/Navigation/navbar';
 import LoginPage from './pages/loginPage';
 import Homepage from './pages/homepage';
+import { Provider } from 'react-redux';
+import { store } from './store';
 
 
 function App() {
@@ -28,6 +30,7 @@ function App() {
     // }, []);
   
     return (
+      <Provider store={store}>
         <div className="App">
         <BrowserRouter>
         {/* {userRole === 'ADMIN' ? (
@@ -51,6 +54,7 @@ function App() {
           </Routes>
         </BrowserRouter>
       </div>
+      </Provider>
     );
   }
   

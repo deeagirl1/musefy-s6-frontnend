@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { registerUser } from "../services/AuthService";
 import { useNavigate } from "react-router-dom";
-import { Login } from "@mui/icons-material";
 import { connect } from "react-redux";
 import { useMediaQuery, Container, Typography, TextField, FormControlLabel, Checkbox, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
 
-export const Register: React.FC = (props: any) => {
+const Register: React.FC = (props: any) => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -43,7 +42,7 @@ export const Register: React.FC = (props: any) => {
     setTermsAccepted(event.target.checked);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = (event: React.SyntheticEvent): void => {
     event.preventDefault();
     if (
       username &&
@@ -55,10 +54,12 @@ export const Register: React.FC = (props: any) => {
     ) {
       props.registerUser(username, password, email, firstName, lastName)
         .then((response: any) => {
+          console.log(response);
           navigate("/");
         })
         .catch((error: any) => {
           console.log(error);
+
         });
     }
   };

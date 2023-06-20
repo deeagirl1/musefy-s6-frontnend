@@ -29,7 +29,6 @@ const Login: React.FC = (props: any) => {
     if (username && password) {
       try {
         const response = await props.authenticateUser(username, password);
-        console.log(response);
         if (response) {
           dispatch(authenticationSuccess(response.userId, response.accessToken, response.refreshToken));
           navigate("/browse");

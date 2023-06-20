@@ -93,8 +93,6 @@ const Playbar: React.FC<PlaybarProps> = ({
         songId: song.songId,
       };
 
-      console.log(userFavoriteSongDTO);
-
       const result = await userService.addSongToFavouriteList(
         userFavoriteSongDTO
       );

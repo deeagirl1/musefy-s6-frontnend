@@ -10,6 +10,7 @@ import songService from "../../../services/music-service/SongService";
 import LoadingPage from "../../../pages/Loading/LoadingPage";
 import Playbar from "../PlayBar/Playbar";
 import React from "react";
+import playlistService from "../../../services/music-service/PlaylistService";
 
 const BrowseComponent: React.FC = () => {
 
@@ -26,7 +27,7 @@ const BrowseComponent: React.FC = () => {
 
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchSongsData = async () => {
       try {
         const songResponse = await songService.getSongs();
         if (songResponse.songs.length > 0) {
@@ -40,15 +41,42 @@ const BrowseComponent: React.FC = () => {
         setIsLoading(true);
       }
     };
-
-    fetchData();
+    fetchSongsData();
   }, []);
+
+  
+  useEffect(() => {
+    const fetchPlaylistData = async () => {
+      try {
+        const playlistResponse = await playlistService.getPlaylists();
+        setPlaylistsData(playlistResponse);
+        setIsLoading(false);
+      } catch (error) {
+        setIsLoading(true);
+      }
+    };
+    fetchPlaylistData();
+  }, []);
+
+
+  useEffect(() => {
+    const fetchAlbumsData = async () => {
+      try {
+        const albumResponse = await AlbumService.getAlbums();
+        setAlbumsData(albumResponse);
+        setIsLoading(false);
+      } catch (error) {
+        setIsLoading(true);
+      }
+    };
+    fetchAlbumsData();
+  }, []);
+
 
   const handleLoadMoreSongs = async () => {
     if (currentPage < totalPages) {
       const nextPage = currentPage + 1;
       const songResponse = await songService.getSongs(nextPage, 4); // Fetch 4 songs per page
-      console.log(songResponse);
       if (songResponse.songs.length > 0) {
         setSongsData((prevSongs) => [...prevSongs, ...songResponse.songs]);
         setCurrentPage(nextPage);

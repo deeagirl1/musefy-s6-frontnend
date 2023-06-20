@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Song } from '../../types';
 
-const API_URL = "http://127.0.0.1:62696/api/songs";
+const API_URL = "http://34.91.28.46/api/songs";
 
 const songService = {
     getSongs: async (page = 0, size = 4) => {
@@ -50,7 +50,6 @@ const songService = {
         const response = await axios.post(API_URL, song);
         return response.data;
       } catch (error) {
-        console.error(error);
         return null;
       }
     },
@@ -59,7 +58,6 @@ const songService = {
         const response = await axios.put(`${API_URL}/${id}`, song);
         return response.data;
       } catch (error) {
-        console.error(error);
         return null;
       }
     },
@@ -68,7 +66,6 @@ const songService = {
         await axios.delete(`${API_URL}/${id}`);
         return true;
       } catch (error) {
-        console.error(error);
         return false;
       }
     }

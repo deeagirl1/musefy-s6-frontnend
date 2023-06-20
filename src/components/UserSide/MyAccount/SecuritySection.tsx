@@ -3,21 +3,20 @@ import userService from "../../../services/UserService";
 import { getDecodedToken } from "../../../services/AuthService";
 import { useNavigate } from "react-router-dom";
 import { Box, Typography, Button } from "@mui/material";
-
+import { RootState } from "../../../store";
+import Cookies from "js-cookie";
 
 const SecuritySection: React.FC = () => {
   const navigate = useNavigate();
-  const userId = getDecodedToken();
+  const userId = Cookies.get("userId");
+  // console.log(userId);
+
   const handleDeleteAccount = () => {
     const confirmDelete = window.confirm("Are you sure you want to delete your account?");
     if (confirmDelete) {
-      const decodedToken = getDecodedToken() as { userId: string };
-      const userId = decodedToken.userId// Replace with the appropriate way to retrieve the userId
-      console.log(userId);
-      userService.deleteUser(userId)
+      userService.deleteUser(userId as string)
         .then((success) => {
           if (success) {
-            // Account deleted successfully, perform any necessary cleanup or redirection
             navigate("/");
           }
         })
@@ -27,21 +26,19 @@ const SecuritySection: React.FC = () => {
     }
   };
 
-  const handleExportData = () => {
-    userService.downloadData()
-      .then((success) => {
-        if (success) {
-          // Data exported successfully, initiate the download or handle the response
-          console.log('Data exported successfully');
-        } else {
-          // Data export failed
-          console.error('Failed to export data');
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
+const handleExportData = () => {
+  userService.downloadData(userId as string)
+    .then((success) => {
+      if (success) {
+        console.log('Data exported successfully');
+      } else {
+        console.error('Failed to export data');
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
 
   const handleChangePassword = () => {
     // Logic for changing the password
@@ -83,3 +80,7 @@ const SecuritySection: React.FC = () => {
 };
 
 export default SecuritySection;
+function useSelector(arg0: (state: any) => any) {
+  throw new Error("Function not implemented.");
+}
+

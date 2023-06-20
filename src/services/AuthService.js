@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
 
-const API_URL = "http://127.0.0.1:62696/api/auth/";
+const API_URL = "http://34.91.28.46/api/auth/";
 
 const cookieOptions = {
   expires: 1, // 1 day
@@ -52,7 +52,7 @@ export const registerUser = (username, password, email, firstName, lastName) => 
       .then((response) => {
         if (response.data) {
           dispatch(authenticationSuccess(response.data.userId, response.data.accessToken, response.data.refreshToken));
-          return { success: true }; // Return success status and access token
+          return response.data
         }
       })
       .catch((error) => {
@@ -64,7 +64,7 @@ export const registerUser = (username, password, email, firstName, lastName) => 
 };
 
 export const getToken = () => {
-  return Cookies.get('token');
+  return Cookies.get('accessToken');
 };
 
 export const getDecodedToken = () => {
@@ -122,7 +122,9 @@ export const authenticationFailure = (error) => {
 };
 
 export const logout = () => {
-  Cookies.remove("token");
+  Cookies.remove("accessToken");
+  Cookies.remove("userId");
+  Cookies.remove("refreshToken");
   return {
     type: "LOGOUT",
   };

@@ -5,7 +5,6 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import { Song } from "../../../types";
-import { Alert, AlertTitle } from "@mui/material";
 
 interface SongCardProps {
   song: Song;
