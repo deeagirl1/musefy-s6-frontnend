@@ -1,4 +1,4 @@
-# Musefy - Semester 6 Individual Project
+# Musefy Frontend - Semester 6 Individual Project
 This is a music streaming platform that provides features similar to Spotify. It is built using microservices architecture with SpringBoot and React.
 
 # Purpose
